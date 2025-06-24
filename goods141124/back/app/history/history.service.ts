@@ -2,13 +2,14 @@ import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
-// Create log action.
+// Действия журнала по истории товаров
 export const logAction = async (
 	shopId: number,
 	plu: string,
 	action: string
 ) => {
 	try {
+		// создаем новую акцию с айди товара наименование товара, название акции
 		const newAction = await prisma.actionHistory.create({
 			data: {
 				shopId,
@@ -17,6 +18,7 @@ export const logAction = async (
 			}
 		})
 		return newAction
+		// в случае ошибки выводим текст ошибки 
 	} catch (error) {
 		console.error('Error logging action:', error)
 		throw error
@@ -24,6 +26,7 @@ export const logAction = async (
 }
 
 // Get history log action by filters.
+// Получаем данные по журналу с акциям товаров
 export const getActionHistory = async (filters: {
 	shopId?: number
 	plu?: string
