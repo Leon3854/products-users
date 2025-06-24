@@ -3,43 +3,35 @@ import { faker } from '@faker-js/faker';
 
 const prisma = new PrismaClient();
 
+// Функция для генерации и добавления 100 фейковых пользователей в базу данных
 async function main() {
   console.log('Starting the user seeding process...'); // Лог начала процесса
   const users = [];
   for (let i = 0; i < 100; i++) {
     users.push({
-      // Обновлено
-      firstName: faker.person.firstName(),
-      // Обновлено
-      lastName: faker.person.lastName(),
-      // Используется актуальный метод
-      age: faker.number.int({ min: 18, max: 90 }),
-      // Используется актуальный метод
-      gender: faker.person.gender(),
-      hasProblems: faker.datatype.boolean(),
+      firstName: faker.person.firstName(), //Фамилия пользователя
+      lastName: faker.person.lastName(), //Имя пользователя
+      age: faker.number.int({ min: 18, max: 90 }), //Возраст пользователя от 18 до 90
+      gender: faker.person.gender(), // Гендер пользователя
+      hasProblems: faker.datatype.boolean(), //Флаг наличия проблем
     });
-    // Лог для отслеживания прогресса
+    // Отслеоживаем прогресс
     if (i % 10 === 0) {
-      // Каждые 10 пользователей
+      // Каждые 10 пользователей выводим прогресс
       console.log(`Generated ${i} users...`);
     }
   }
-  // Лог перед созданием пользователей
-  console.log('About to create users in the database...');
+  console.log('About to create users in the database...'); // Перед добавлением пользователей в БД
   await prisma.user.createMany({ data: users });
-  // Лог после успешного создания пользователей
-  console.log('Successfully created users in the database.');
+  console.log('Successfully created users in the database.'); //После успешного добавления пользователей
 }
 
 main()
   .catch((error) => {
-    // Лог для ошибок
-    console.error('Error during seeding:', error);
+    console.error('Error during seeding:', error); //Обработка ошибок при заполнении базы
   })
   .finally(async () => {
-    // Лог перед отключением
-    console.log('Disconnecting from the database...');
+    console.log('Disconnecting from the database...');// Перед отключением от базы
     await prisma.$disconnect();
-    // Лог после отключения
-    console.log('Disconnected from the database.');
+    console.log('Disconnected from the database.'); // После отключения от базы
   });
